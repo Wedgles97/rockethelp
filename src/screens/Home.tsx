@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Alert } from 'react-native';
+import auth from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import { VStack, HStack, IconButton, useTheme, Text, Heading, FlatList, Center } from 'native-base';
 import { SignOut } from 'phosphor-react-native';
@@ -24,12 +26,21 @@ export function Home() {
   const navigation = useNavigation();
   const { colors } = useTheme();
 
-  function handleNewOrder(){
+  function handleNewOrder() {
     navigation.navigate('new');
   }
 
-  function handleOpenDetails(orderId: string){
+  function handleOpenDetails(orderId: string) {
     navigation.navigate('details', { orderId });
+  }
+
+  function handleLogout() {
+    auth()
+    .signOut()
+    .catch(error => {
+      console.log(error);
+      return Alert.alert('Sair', 'Não foi possível sair.');
+    });
   }
 
   return (
@@ -47,6 +58,7 @@ export function Home() {
 
         <IconButton 
           icon={<SignOut size={26} color={colors.gray[300]}/>}
+          onPress={handleLogout}
         />
       </HStack>
 
