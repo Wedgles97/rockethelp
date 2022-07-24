@@ -1,26 +1,32 @@
-import {
+import React, {
   useState,
   useEffect
 } from 'react';
+
+import { Alert } from 'react-native';
+
+import {
+  useNavigation,
+  useRoute
+} from '@react-navigation/native';
 
 import { 
   VStack,
   Text,
   HStack,
   useTheme,
-  ScrollView
+  ScrollView,
+  Box
 } from 'native-base';
 
 import { 
   CircleWavyCheck,
   Hourglass,
   DesktopTower,
-  Clipboard
+  ClipboardText
 } from 'phosphor-react-native';
 
-import { useRoute } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
-
 
 //Components
 import { Header } from '../Components/Header';
@@ -46,10 +52,35 @@ export function Details() {
   const [solution, setSolution] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [order, setOrder] = useState<OrderDetails>({} as OrderDetails);
-
-  const { colors } = useTheme();
+  
   const route = useRoute();
   const { orderId } = route.params as RouteParams;
+  
+  const { colors } = useTheme();
+  const navigation = useNavigation();
+
+  function handleOrderClosed() {
+    if(!solution) {
+      return Alert.alert('Solicitação', 'Informar a solução para encerrar a solicitação.');
+    }
+
+    firestore()
+    .collection<OrderFirestoreDTO>('orders')
+    .doc(orderId)
+    .update({
+      status: 'closed',
+      solution,
+      closed_at: firestore.FieldValue.serverTimestamp()
+    })
+    .then(() => {
+      Alert.alert('Solicitação', 'Solicitação encerrada.');
+      navigation.goBack();
+    })
+    .catch((error) => {
+      console.log(error);
+      Alert.alert('Solciitação', 'Não foi possível encerrar a sua solicitação.')
+    })
+  }
 
   useEffect(() => {
     firestore()
@@ -88,7 +119,10 @@ export function Details() {
 
   return (
     <VStack flex={1} bg="gray.700">
-      <Header title="Solicitação" />
+      <Box px={6} bg="gray.600">
+        <Header title="Solicitação" />
+      </Box>
+
       <HStack bg="gray.500" justifyContent="center" p={4}>
         {
           order.status === 'closed'
@@ -111,36 +145,40 @@ export function Details() {
           title="equipamento"
           description={`Patrimônio ${order.patrimony}`}
           icon={DesktopTower}
-          footer={order.when}
         />
 
         <CardDetails 
           title="descrição do problema"
           description={order.description}
-          icon={Clipboard}
+          icon={ClipboardText}
+          footer={`Registrado em ${order.when}`}
         />
 
         <CardDetails 
           title="solução"
           icon={CircleWavyCheck}
+          description={order.solution}
           footer={order.closed && `Encerrado em ${order.closed}`}
         >
-          <Input
-            placeholder="Descrição da solução"
-            onChangeText={setSolution}
-            h={24}
-            textAlignVertical="top"
-            multiline
-          />
+          {
+            order.status === 'open' &&
+            <Input
+              placeholder="Descrição da solução"
+              onChangeText={setSolution}
+              h={24}
+              textAlignVertical="top"
+              multiline
+            />
+          }
         </CardDetails>
-
       </ScrollView>
 
       {
-        !order.closed && 
-        <Button 
+        order.status === 'open' &&
+        <Button
           title="Encerrar Solicitação"
           m={5}
+          onPress={handleOrderClosed}
         />
       }
     </VStack>
