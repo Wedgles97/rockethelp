@@ -4,6 +4,7 @@ import { VStack } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore'
 
+// Components
 import { Header } from '../Components/Header';
 import { Input } from '../Components/Input';
 import { Button } from '../Components/Button';
@@ -17,7 +18,7 @@ export function Register() {
 
   function handleNewOrderRegister() {
     if (!patrimony || !description) {
-      return Alert.alert('Register', 'Preencha todos os campos.');
+      return Alert.alert('Registrar', 'Preencha todos os campos.');
     }
 
     setIsLoading(true);
@@ -31,7 +32,7 @@ export function Register() {
       created_at: firestore.FieldValue.serverTimestamp()
     })
     .then(() => {
-      Alert.alert('Solicitação', 'Solicitação registrada com sucesso.');
+      Alert.alert("Solicitação", "Solicitação registrada com sucesso.");
       navigation.goBack();
     })
     .catch((error) => {
@@ -48,15 +49,16 @@ export function Register() {
       <Input
         placeholder="Número do patrimônio"
         mt={4}
-        onChangText={setPatrimony}
+        onChangeText={setPatrimony}
       />
+
       <Input 
         placeholder="Descrição do problema"
         flex={1}
         mt={5}
         multiline
         textAlignVertical="top"
-        onChangText={setDescription}
+        onChangeText={setDescription}
       />
 
       <Button 

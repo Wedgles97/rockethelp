@@ -1,4 +1,10 @@
-import { HStack, IconButton, useTheme, StyledProps, Heading } from 'native-base';
+import { 
+  HStack, 
+  IconButton, 
+  useTheme, 
+  StyledProps, 
+  Heading 
+} from 'native-base';
 import { CaretLeft } from 'phosphor-react-native';
 import { useNavigation } from '@react-navigation/native';
 
