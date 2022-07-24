@@ -30,7 +30,7 @@ Neste app, você pode criar ticket's de solicitação, gerenciar seu status, des
 
 ## 📷 Screenshots:
 
-<div style="">
+<div style="display: grid">
   <img src="src/assets/screenshots/Screenshot_1.png" width="256px"/> 
   <img src="src/assets/screenshots/Screenshot_2.png" width="256px"/> 
   <img src="src/assets/screenshots/Screenshot_3.png" width="256px"/> 
@@ -59,13 +59,3 @@ expo prebuild
 expo run:android
 ```
 OBS: Este processo pode levar um tempo.   
-
-## FAQ 
-
-### *De onde saiu o design do app?*
-
-O design foi desenvolvido pela equipe da Rocketseat no evento Ignite Lab
-
-### *Este projeto foi de evento?*
-
-Originalmente sim, pela [Rocketseat](https://www.rocketseat.com.br/). O objetivo é aprender com mestres dessa tecnologia e fazer modificações pessoais.
